@@ -1,0 +1,23 @@
+.dropdown-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 240px;
+  padding: 8px;
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown-separator {
+  margin: 8px 0;
+  border-top: 1px solid #eaeaea;
+}
