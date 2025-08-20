@@ -1,8 +1,9 @@
 {
-  "name": "ETHERNS",
+  "name": "simsfy",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "homepage": "./",
   "author": {
     "name": "SR VINIX",
     "email": "danilovinicius1790@gmail.com",
