@@ -49,7 +49,7 @@ export default function HallFame() {
     <div className="h-[calc(100vh)] overflow-y-auto w-full">
     <div className="grid xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 w-full p-2 pb-28">
       {Array.isArray(getHallOffFame) && getHallOffFame.length > 0 ? (
-        getHallOffFame.map((post: UserType, index: number) => {
+        getHallOffFame.map((post: any, index: number) => {
           return (
             <Link
               to={`${location.origin}/profiler/${post.username}`}
