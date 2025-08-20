@@ -18,7 +18,7 @@ export default defineConfig({
          cert: fs.readFileSync(path.resolve(__dirname, './key/cert.pem')),
       }
   },
-  build: {
-    outDir: "C:/xampp/htdocs/simsfy"
-  }
+  // build: {
+  //   outDir: "C:/xampp/htdocs/simsfy"
+  // }
 });
