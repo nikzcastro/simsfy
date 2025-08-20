@@ -190,7 +190,7 @@ export default function PostUpload() {
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <button
-                    onClick={() => handleRemoveImage(0)}
+                    // onClick={() => handleRemoveImage(0)}
                     className="p-2 bg-red rounded-full hover:bg-red/80 transition-all"
                     aria-label="Remover imagem"
                   >
@@ -260,7 +260,7 @@ export default function PostUpload() {
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                       <button
-                        onClick={() => handleRemoveImage(index)}
+                        // onClick={() => handleRemoveImage(index)}
                         className="p-2 bg-red rounded-full hover:bg-red/90 transition-all"
                         aria-label="Remover imagem"
                       >
@@ -330,7 +330,7 @@ export default function PostUpload() {
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <button
-                      onClick={() => handleRemoveImage(index)}
+                      // onClick={() => handleRemoveImage(index)}
                       className="p-1 bg-red rounded-full hover:bg-red-80 transition-all"
                       aria-label="Remover imagem"
                     >

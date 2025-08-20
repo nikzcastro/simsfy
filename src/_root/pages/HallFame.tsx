@@ -9,6 +9,7 @@ import { Crown } from "lucide-react";
 
 export type UserType = {
   id: number;
+  coverUrl?: string;
   username: string;
   bannerUrl: string;
   imageUrl: string;
