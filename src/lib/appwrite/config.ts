@@ -12,6 +12,7 @@ export const api = {
     try {
       const authToken = localStorage.getItem("authToken");
       const defaultHeaders: Record<string, string> = {
+        isclient: BASE_CLIENT_IS_CLIENT,
         isCliet: BASE_CLIENT_IS_CLIENT,
         Authorization: `Bearer ${authToken}`,
       };
