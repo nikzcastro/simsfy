@@ -34,7 +34,7 @@ export type PostType = {
 };
 
 export default function HallFame() {
-  const { user: MyUser, checkAuthUser } = useUserContext();
+  const { user: MyUser, checkAuthUser, isAuthenticated } = useUserContext();
   const {
     data: getHallOffFame,
     isLoading: isLoading,
@@ -136,7 +136,7 @@ export default function HallFame() {
                       Share
                     </button>
 
-                    {MyUser && (
+                    {MyUser && isAuthenticated && (
                       <>
                         {isFollowed(user.id, MyUser.following) ? (
                           <button
