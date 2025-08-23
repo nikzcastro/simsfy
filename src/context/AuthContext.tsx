@@ -3,8 +3,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { IUser } from "@/types";
 import { getCurrentUser } from "@/lib/appwrite/api";
+import { api } from "@/lib/appwrite/config";
 
-export const INITIAL_USER = {
+export const INITIAL_USER: IUser = {
   id: "",
   username: "",
   email: "",
@@ -14,11 +15,19 @@ export const INITIAL_USER = {
   verified: false,
   bannerUrl: "",
   colections: [],
+  providers: [],
+  followers: [],
+  following: [],
   site: "",
   Country: "",
   firstname: "",
   name: "",
+  isDarkMode: false,
+  theme: "dark",
+  posts: [],
+  file: []
 };
+
 
 const checkDarkMode = (): boolean => {
   return localStorage.getItem("DarkMode") === "true";
@@ -28,15 +37,15 @@ const INITIAL_STATE = {
   user: INITIAL_USER,
   isLoading: false,
   isAuthenticated: false,
-  setUser: () => {},
-  setIsAuthenticated: () => {},
+  setUser: () => { },
+  setIsAuthenticated: () => { },
   checkAuthUser: async () => false as boolean,
   isDarkMode: checkDarkMode(),
-  handleDarkMode: () => {},
+  handleDarkMode: () => { },
   isModalLogin: false,
-  setIsModalLogin: (active: boolean) => {},
+  setIsModalLogin: (active: boolean) => { },
   search: "",
-  setSearch: (text: string) => {},
+  setSearch: (text: string) => { },
 };
 
 type IContextType = {
@@ -66,14 +75,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token] = useState(localStorage.getItem("authToken"));
 
   useEffect(() => {
-    const isDarkMode = checkDarkMode();
-    SetisDarkMode(isDarkMode);
-  }, []);
+    // const isDarkMode = checkDarkMode();
+    // SetisDarkMode(isDarkMode);
+    if (user.theme === "dark") {
+      SetisDarkMode(true);
+    } else {
+      SetisDarkMode(false);
+    }
+
+  }, [user]);
 
   const handleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    localStorage.setItem("DarkMode", newDarkMode ? "true" : "false");
-    SetisDarkMode(newDarkMode);
+    // const newDarkMode = !isDarkMode;
+    // localStorage.setItem("DarkMode", newDarkMode ? "true" : "false");
+    // SetisDarkMode(newDarkMode);
+    let theme = "dark"
+    if (user.theme == "light") {
+      theme = "dark"
+    } else {
+      theme = "light"
+    }
+    api.post('updateTheme', {
+      theme: theme
+    })
+    SetisDarkMode((prev) => !prev);
   };
 
   const checkAuthUser = async () => {
@@ -94,13 +119,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           Country: currentAccount.Country,
           firstname: currentAccount.firstname,
           name: currentAccount.name,
+          providers: currentAccount.providers,
           ...currentAccount,
         });
         setIsAuthenticated(true);
-       
+        if (user.theme === "dark") {
+          SetisDarkMode(true);
+        } else {
+          SetisDarkMode(false);
+        }
 
         return true;
-      }else{
+      } else {
         setIsAuthenticated(false);
       }
 

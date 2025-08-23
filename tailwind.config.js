@@ -23,6 +23,7 @@ module.exports = {
     },
     extend: {
       backgroundColors: {
+        'base': '#fc5a03',
         'primary-green': '#26b8016c',
         'primary-white': '#FFFFFF',
         'primary-500': '#877EFF',

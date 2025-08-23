@@ -13,7 +13,6 @@ import PoppupLogin from "./components/shared/PoppupLogin";
 import { useEffect } from "react";
 import PoppupRegister from "./components/shared/PoppupRegister";
 import { useToast } from "./components/ui";
-import "./globals.css";
 import Profile from "./_root/pages/Profile";
 import About from "./_root/pages/About";
 import Vip from "./_root/pages/Vip";
@@ -26,6 +25,9 @@ import Collection from "./components/shared/Collection";
 import Collections from "./_root/pages/Collections";
 import Editprofile from "./_root/pages/Editprofile";
 import Categories from "./_root/pages/Categories";
+import Success from "./_auth/success/Success";
+import Foryou from "./_root/pages/Foryou/Foryou";
+import Failed from "./_auth/Failed/Failed";
 
 const App = () => {
   const { isDarkMode, isModalLogin, setIsModalLogin, checkAuthUser } =
@@ -33,7 +35,7 @@ const App = () => {
 
   useEffect(() => {
     checkAuthUser();
-  }, []); 
+  }, []);
 
   return (
     <div className={`${isDarkMode && "dark"}`}>
@@ -46,12 +48,15 @@ const App = () => {
         <Routes>
           <Route element={<RootLayout />}>
             {/* public routes */}
-            <Route path="/*" element={<Home />} />
+            <Route path="/foryou" element={<Foryou />} />
+            <Route path="/login/failed" element={<Failed />} />
+            <Route path="/login/success" element={<Success />} />
+            <Route path="/" element={<Home />} />
             <Route path="/Categories/:id/:subid?" element={<Categories />}></Route>
             <Route path="/register/*" element={<PoppupRegister />}></Route>
             <Route path="/terms" element={<Terms />}></Route>
             <Route path="/about/*" element={<About />}></Route>
-            <Route path="/vip/*" element={<Vip />}></Route>
+            <Route path="/vip/*" element={<Vip />}></Route> 
             <Route path="/search/*" element={<></>}></Route>
             <Route path="/Members/" element={<HallFame />}></Route>
             <Route path="/profiler/:id/*" element={<UserProfile />}></Route>
@@ -87,6 +92,7 @@ const App = () => {
                 </PrivateRoutes>
               }></Route>
           </Route>
+
           <Route path="*" element={<ReturnHome />}></Route>
         </Routes>
 

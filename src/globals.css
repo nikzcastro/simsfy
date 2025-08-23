@@ -17,6 +17,15 @@
   user-select: none;
 } */
 
+
+image, p,span,h1,h2 {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
 @layer base {
   * {
     @apply box-border list-none p-0 m-0 scroll-smooth;
@@ -444,4 +453,61 @@ body {
   .masonry {
     column-count: 1;
   }
+}
+
+
+/* Failed.css */
+.failed-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8d7da;
+}
+
+.failed-box {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 40px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.failed-icon {
+  font-size: 50px;
+  color: #dc3545;
+  margin-bottom: 20px;
+}
+
+.failed-message {
+  font-size: 24px;
+  color: #dc3545;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.failed-description {
+  color: #6c757d;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+.retry-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.retry-button:hover {
+  background-color: #c82333;
+}
+
+.retry-button:focus {
+  outline: none;
 }

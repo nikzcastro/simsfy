@@ -5,11 +5,11 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { QueryProvider } from "@/lib/react-query/QueryProvider";
 import './lib/i18n'
-
+import "./globals.css";
 import App from "./App";
 
-ReactDOM.createRoot(document.getElementById("root") !).render(
-//  <React.StrictMode>
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
     <BrowserRouter>
       <QueryProvider>
         <AuthProvider>
@@ -17,5 +17,5 @@ ReactDOM.createRoot(document.getElementById("root") !).render(
         </AuthProvider>
       </QueryProvider>
     </BrowserRouter>
-  // </React.StrictMode>
+  </React.StrictMode>
 );

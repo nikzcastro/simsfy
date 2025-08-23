@@ -236,6 +236,17 @@ export const excludeGenderAge = [
   "Software",
   "Lots",
 ];
+export interface ProvidersList {
+    provider: "GOOGLE" | "DISCORD" | "CREDENTIAL" | "GITHUB";
+    email: string;
+    imageUrl: string;
+    bannerUrl: string;
+    bio: string;
+    site: string;
+    verified: string;
+    vip: string;
+}
+
 export type IUser = {
   id?: string;
   email?: string;
@@ -249,15 +260,20 @@ export type IUser = {
   verified?: boolean;
   bio?: string;
   Country?: string;
+  providers?: ProvidersList[];
   file?: File[];
   colections?: CollectionsProps[];
+  followers?: any[];
+  following?: any[];
+  isDarkMode?: boolean;
+  theme?: string;
   posts?: {
     id: string;
     content: string;
     imageUrl: string;
     imageId: string;
     createdAt: string;
-    likes?: likesType[];
+    likes: likesType[];
   }[];
 };
 export type INewUser = {

@@ -1,5 +1,5 @@
 import { ID, Query } from "appwrite";
-
+import Cookies from 'js-cookie';
 import fs from "fs";
 import { api } from "./config";
 import { INewUser, IUser, PostsType, PostType } from "@/types";
@@ -36,8 +36,10 @@ export async function getCurrentUser(): Promise<any> {
 export async function signOutAccount() {
   try {
     const sesstion = localStorage.getItem("authToken");
-    if (sesstion) {
+    const authToken = Cookies.get('authToken')
+    if (sesstion || authToken) {
       localStorage.removeItem("authToken");
+      Cookies.remove('authToken')
       return true;
     }
   } catch (error) {

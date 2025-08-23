@@ -3,6 +3,7 @@ import Verified from "../../components/shared/Verified";
 import { useUserContext } from "../../context/AuthContext";
 import userImg from "@/public/assets/icons/user.svg";
 import Logo from "@/public/assets/images/logo-simsfy.ico";
+
 import {
   useGetPostById,
   useGetUserPosts,
@@ -11,8 +12,8 @@ import {
   useUpdateProfileImage,
   useUpdateUser,
 } from "../../lib/react-query/queries";
-import { Crown, Loader } from "lucide-react";
-import { IUser, PostsType } from "../../types";
+import { Crown, Loader, PlusIcon, LockIcon } from "lucide-react";
+import { IUser, PostsType, ProvidersList } from "../../types";
 import { useToast } from "@/components/ui";
 import { copyTextToClipboard } from "@/hooks/clip";
 import { GridPostList } from "@/components/shared";
@@ -20,11 +21,15 @@ import { motion } from "framer-motion";
 import GridCollections from "../../components/shared/GridCollections";
 import { Link } from "react-router-dom";
 import { VerifiedIcon } from "lucide-react";
+import googleImage from "../../public/assets/images/google.png"
+import clsx from "clsx";
+import ModalSyncAccout from "@/components/forms/ModalSyncAccout";
 
 export default function Profile() {
   const { user, isLoading: isUserLoading, checkAuthUser } = useUserContext();
   const [userS, setUser] = useState<IUser>(user);
   const [isEditing, setIsEditing] = useState(false);
+  const [modalSyncAccout, setModalSyncAccout] = useState(false);
   const [imageInput, setImageInput] = useState<string>("");
   const [BannerImage, setBannerImage] = useState<string>("");
   const [ProfileImage, setProfileImage] = useState<string>("");
@@ -195,8 +200,13 @@ export default function Profile() {
     toast({ title: "Link Cópiado!" });
   };
 
+  const handleOpenModalSyncAccout = () => {
+    setModalSyncAccout((prev) => !prev)
+  }
+
   return (
     <div className="w-full h-full relative overflow-y-auto scrollbar bg-gray-50 dark:bg-neutral-900">
+      <ModalSyncAccout user={user} open={modalSyncAccout} onClose={() => setModalSyncAccout(false)}/>
       {isUpdating ? (
         <div className="flex justify-center items-center min-h-screen w-full">
           <Loader />
@@ -206,7 +216,7 @@ export default function Profile() {
           {/* Header Section with Banner and Avatar */}
           <div className="relative">
             {/* Banner */}
-            <div className="relative w-full h-64 sm:h-72 md:h-80 overflow-hidden bg-black">
+            <div className="relative w-full h-64 sm:h-72 md:h-80 overflow-hidden bg-black select-none">
               {BannerImage && (
                 <img
                   src={BannerImage || "/placeholder.svg"}
@@ -259,30 +269,30 @@ export default function Profile() {
 
               {/* Botões de Ação - Desktop */}
               <div className="absolute -bottom-8 right-4 sm:right-8 md:right-12 hidden md:flex gap-3">
-                <Link
+                {/* <Link
                   to={`/profiler/${user.id}/editprofile`}
                   className="hidden h-11 items-center justify-center rounded-full bg-lime-300 hover:bg-lime-400 px-5 text-md font-medium text-black shadow-lg transition-all hover:from-black hover:to-gray-800 hover:shadow-xl dark:from-gray-800 dark:to-gray-900 dark:hover:from-gray-700 dark:hover:to-gray-800 sm:flex md:h-12 md:px-6">
-                    Follow
-                </Link>
-                <button onClick={handleShare} 
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg transition-all hover:bg-gray-50 hover:shadow-xl dark:bg-neutral-800 dark:hover:bg-neutral-700 md:h-12 md:w-12"
-                    aria-label="Share collection"
-                        >
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor"><path d="M274.96-249.7q-95.94 0-163.13-67.17-67.18-67.18-67.18-163.11t67.18-163.13q67.19-67.19 163.13-67.19h111.67q23.67 0 40.13 16.57 16.46 16.58 16.46 40.01 0 23.44-16.46 40.01-16.46 16.58-40.13 16.58H274.96q-49.05 0-83.09 34.16-34.04 34.17-34.04 82.97t34.04 82.97q34.04 34.16 83.09 34.16h111.67q23.67 0 40.13 16.58 16.46 16.57 16.46 40.01 0 23.43-16.46 40.01-16.46 16.57-40.13 16.57H274.96Zm78.93-178.06q-22.09 0-37.55-15.45-15.45-15.46-15.45-37.55 0-22.34 15.33-37.67 15.34-15.33 37.67-15.33h252.22q22.09 0 37.55 15.33 15.45 15.33 15.45 37.67 0 22.09-15.33 37.55-15.34 15.45-37.67 15.45H353.89ZM573.37-249.7q-23.67 0-40.13-16.57-16.46-16.58-16.46-40.01 0-23.44 16.46-40.01 16.46-16.58 40.13-16.58h111.67q49.05 0 83.09-34.16 34.04-34.17 34.04-82.97t-34.04-82.97q-34.04-34.16-83.09-34.16H573.37q-23.67 0-40.13-16.58-16.46-16.57-16.46-40.01 0-23.43 16.46-40.01 16.46-16.57 40.13-16.57h111.67q95.94 0 163.13 67.17 67.18 67.18 67.18 163.11t-67.18 163.13q-67.19 67.19-163.13 67.19H573.37Z"/></svg>
+                  Follow
+                </Link> */}
+                <button onClick={handleShare}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg transition-all hover:bg-gray-50 hover:shadow-xl dark:bg-neutral-800 dark:hover:bg-neutral-700 md:h-12 md:w-12"
+                  aria-label="Share collection"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor"><path d="M274.96-249.7q-95.94 0-163.13-67.17-67.18-67.18-67.18-163.11t67.18-163.13q67.19-67.19 163.13-67.19h111.67q23.67 0 40.13 16.57 16.46 16.58 16.46 40.01 0 23.44-16.46 40.01-16.46 16.58-40.13 16.58H274.96q-49.05 0-83.09 34.16-34.04 34.17-34.04 82.97t34.04 82.97q34.04 34.16 83.09 34.16h111.67q23.67 0 40.13 16.58 16.46 16.57 16.46 40.01 0 23.43-16.46 40.01-16.46 16.57-40.13 16.57H274.96Zm78.93-178.06q-22.09 0-37.55-15.45-15.45-15.46-15.45-37.55 0-22.34 15.33-37.67 15.34-15.33 37.67-15.33h252.22q22.09 0 37.55 15.33 15.45 15.33 15.45 37.67 0 22.09-15.33 37.55-15.34 15.45-37.67 15.45H353.89ZM573.37-249.7q-23.67 0-40.13-16.57-16.46-16.58-16.46-40.01 0-23.44 16.46-40.01 16.46-16.58 40.13-16.58h111.67q49.05 0 83.09-34.16 34.04-34.17 34.04-82.97t-34.04-82.97q-34.04-34.16-83.09-34.16H573.37q-23.67 0-40.13-16.58-16.46-16.57-16.46-40.01 0-23.43 16.46-40.01 16.46-16.57 40.13-16.57h111.67q95.94 0 163.13 67.17 67.18 67.18 67.18 163.11t-67.18 163.13q-67.19 67.19-163.13 67.19H573.37Z" /></svg>
                 </button>
                 {/* Edit Button - smaller on mobile */}
-                <button 
+                <button
                   className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-lg transition-all hover:bg-gray-50 hover:shadow-xl dark:bg-neutral-800 dark:hover:bg-neutral-700 md:h-12 md:w-12"
                   aria-label="Like collection"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor"><path d="M480.12-149q-34.55 0-59.13-24.55-24.58-24.56-24.58-59.04 0-34.58 24.56-59.2 24.55-24.62 59.03-24.62 34.67 0 59.13 24.59 24.46 24.6 24.46 59.13 0 34.54-24.46 59.11Q514.67-149 480.12-149Zm0-247.41q-34.55 0-59.13-24.56-24.58-24.55-24.58-59.03 0-34.67 24.56-59.13 24.55-24.46 59.03-24.46 34.67 0 59.13 24.46t24.46 59.01q0 34.55-24.46 59.13-24.46 24.58-59.01 24.58Zm0-247.18q-34.55 0-59.13-24.64-24.58-24.64-24.58-59.25t24.56-59.06Q445.52-811 480-811q34.67 0 59.13 24.46 24.46 24.45 24.46 59.06t-24.46 59.25q-24.46 24.64-59.01 24.64Z"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor"><path d="M480.12-149q-34.55 0-59.13-24.55-24.58-24.56-24.58-59.04 0-34.58 24.56-59.2 24.55-24.62 59.03-24.62 34.67 0 59.13 24.59 24.46 24.6 24.46 59.13 0 34.54-24.46 59.11Q514.67-149 480.12-149Zm0-247.41q-34.55 0-59.13-24.56-24.58-24.55-24.58-59.03 0-34.67 24.56-59.13 24.55-24.46 59.03-24.46 34.67 0 59.13 24.46t24.46 59.01q0 34.55-24.46 59.13-24.46 24.58-59.01 24.58Zm0-247.18q-34.55 0-59.13-24.64-24.58-24.64-24.58-59.25t24.56-59.06Q445.52-811 480-811q34.67 0 59.13 24.46 24.46 24.45 24.46 59.06t-24.46 59.25q-24.46 24.64-59.01 24.64Z" /></svg>
                 </button>
               </div>
             </div>
           </div>
 
           {/* Profile Information */}
-           <div className="pt-20 pb-2 px-4 sm:px-6 md:px-8">
+          <div className="pt-20 pb-2 px-4 sm:px-6 md:px-8">
             <div className="text-center">
               {/* Name and Verification */}
               <div className="flex items-center justify-center gap-2">
@@ -290,34 +300,61 @@ export default function Profile() {
                   {user?.name} {user?.firstname}
                 </h1>
                 {user?.verified && <VerifiedIcon />}
-                {user?.vip && <Crown  className="text-yellow-200 w-6 hover:text-yellow-200 hover:cursor-pointer"  />}
+                {user?.vip && <Crown className="text-yellow-200 w-6 hover:text-yellow-200 hover:cursor-pointer" />}
 
               </div>
-
-              {/* Username */}
-              <div className="text-gray-500 dark:text-neutral-500 font-medium">@{user?.username}</div>
-            
-            {/* Bio Section */}
-          {user?.bio && (
-            <div className="mx-4 sm:mx-6 md:mx-8 mb-2">
-              <div className="text-center max-w-3xl mx-auto">
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{user.bio}</p>
+              <div className="flex justify-center items-center gap-2 flex-col">
+                {/* Username */}
+                <div className="text-gray-500 dark:text-neutral-500 font-medium">@{user?.username}</div>
+                <div className="flex justify-center items-center gap-2 select-none" draggable={false}>
+                  {user && user.providers && Array.isArray(user.providers) && user.providers.some((provider) => provider && provider.provider === 'GITHUB') && (
+                    <div draggable={false}>
+                      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30">
+                        <path fill="#fff" d="M15,3C8.373,3,3,8.373,3,15c0,5.623,3.872,10.328,9.092,11.63C12.036,26.468,12,26.28,12,26.047v-2.051 c-0.487,0-1.303,0-1.508,0c-0.821,0-1.551-0.353-1.905-1.009c-0.393-0.729-0.461-1.844-1.435-2.526 c-0.289-0.227-0.069-0.486,0.264-0.451c0.615,0.174,1.125,0.596,1.605,1.222c0.478,0.627,0.703,0.769,1.596,0.769 c0.433,0,1.081-0.025,1.691-0.121c0.328-0.833,0.895-1.6,1.588-1.962c-3.996-0.411-5.903-2.399-5.903-5.098 c0-1.162,0.495-2.286,1.336-3.233C9.053,10.647,8.706,8.73,9.435,8c1.798,0,2.885,1.166,3.146,1.481C13.477,9.174,14.461,9,15.495,9 c1.036,0,2.024,0.174,2.922,0.483C18.675,9.17,19.763,8,21.565,8c0.732,0.731,0.381,2.656,0.102,3.594 c0.836,0.945,1.328,2.066,1.328,3.226c0,2.697-1.904,4.684-5.894,5.097C18.199,20.49,19,22.1,19,23.313v2.734 c0,0.104-0.023,0.179-0.035,0.268C23.641,24.676,27,20.236,27,15C27,8.373,21.627,3,15,3z"></path>
+                      </svg>
+                    </div>
+                  )}
+                  {user && user.providers && Array.isArray(user.providers) && user.providers.some((provider) => provider && provider.provider === 'DISCORD') && (
+                    <div draggable={false}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612" />
+                      </svg>
+                    </div>
+                  )}
+                  {user && user.providers && Array.isArray(user.providers) && user.providers.some((provider) => provider && provider.provider === 'GOOGLE') && (
+                    <div draggable={false}>
+                      <img draggable={false} src={googleImage} alt="Google" className="w-6" />
+                    </div>
+                  )}
+                  {user && user.providers && Array.isArray(user.providers) && user.providers.some((provider) => provider && provider.provider === 'CREDENTIAL') && (
+                    <div draggable={false}>
+                      <LockIcon />
+                    </div>
+                  )}
+                  <PlusIcon onClick={handleOpenModalSyncAccout} className="hover:cursor-pointer" />
+                </div>
               </div>
-            </div>
-          )}
-
-          {/* Website */}
-              {user?.site && (
-            <a
-              href={user.site.startsWith("http") ? user.site : `https://${user.site}`}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              className="inline-flex items-center justify-center w-10 h-10 bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 rounded-full transition-all duration-200 hover:scale-110">
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-7-.5-14.5T799-507q-5 29-27 48t-52 19h-80q-33 0-56.5-23.5T560-520v-40H400v-80q0-33 23.5-56.5T480-720h40q0-23 12.5-40.5T563-789q-20-5-40.5-8t-42.5-3q-134 0-227 93t-93 227h200q66 0 113 47t47 113v40H400v110q20 5 39.5 7.5T480-160Z"/></svg>
-            </a>
+              {/* Bio Section */}
+              {user?.bio && (
+                <div className="mx-4 sm:mx-6 md:mx-8 mb-2">
+                  <div className="text-center max-w-3xl mx-auto">
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{user.bio}</p>
+                  </div>
+                </div>
               )}
 
-            {/* Action Buttons - Mobile Only */}
+              {/* Website */}
+              {user?.site && (
+                <a
+                  href={user.site.startsWith("http") ? user.site : `https://${user.site}`}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="inline-flex items-center justify-center w-10 h-10 bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 rounded-full transition-all duration-200 hover:scale-110">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentcolor"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-7-.5-14.5T799-507q-5 29-27 48t-52 19h-80q-33 0-56.5-23.5T560-520v-40H400v-80q0-33 23.5-56.5T480-720h40q0-23 12.5-40.5T563-789q-20-5-40.5-8t-42.5-3q-134 0-227 93t-93 227h200q66 0 113 47t47 113v40H400v110q20 5 39.5 7.5T480-160Z" /></svg>
+                </a>
+              )}
+
+              {/* Action Buttons - Mobile Only */}
               <div className="flex flex-wrap items-center justify-center gap-3 pt-4 md:hidden">
                 <button
                   onClick={handleShare}
@@ -328,48 +365,48 @@ export default function Profile() {
                   </span>
                 </button>
 
-                <Link
+                {/* <Link
                   to={`/profiler/${user.id}/editprofile`}
                   className="px-5 sm:px-6 py-2.5 bg-lime-300 hover:bg-lime-400 text-black font-medium rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                 >
                   <span className="flex items-center gap-1">
                     Follow
                   </span>
-                </Link>
+                </Link> */}
               </div>
 
-             {/* Stats Section */}
-            <div className="flex justify-center items-center mt-4 mb-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 w-full lg:w-1/3 gap-1 rounded-xl overflow-hidden border border-gray-200 dark:border-neutral-700">
-              <div className="bg-white dark:bg-neutral-800 p-4 text-center border-r border-b sm:border-b-0 border-gray-200 dark:border-neutral-700">
-                <div className="text-sm text-gray-500 dark:text-gray-400">Following</div>
-                <div className="text-xl font-bold text-gray-900 dark:text-white">
-                  {Math.floor(Math.random() * 1000) + 100}
-                </div>
-              </div>
+              {/* Stats Section */}
+              <div className="flex justify-center items-center mt-4 mb-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 w-full lg:w-1/3 gap-1 rounded-xl overflow-hidden border border-gray-200 dark:border-neutral-700">
+                  <div className="bg-white dark:bg-neutral-800 p-4 text-center border-r border-b sm:border-b-0 border-gray-200 dark:border-neutral-700">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">Following</div>
+                    <div className="text-xl font-bold text-gray-900 dark:text-white">
+                      {user ? user.following.length : 0}
+                    </div>
+                  </div>
 
-              <div className="bg-white dark:bg-neutral-800 p-4 text-center border-b sm:border-b-0 sm:border-r border-gray-200 dark:border-neutral-700">
-                <div className="text-sm text-gray-500 dark:text-gray-400">Followers</div>
-                <div className="text-xl font-bold text-gray-900 dark:text-white">
-                  {Math.floor(Math.random() * 5000) + 500}
-                </div>
-              </div>
+                  <div className="bg-white dark:bg-neutral-800 p-4 text-center border-b sm:border-b-0 sm:border-r border-gray-200 dark:border-neutral-700">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">Followers</div>
+                    <div className="text-xl font-bold text-gray-900 dark:text-white">
+                      {user ? user.followers.length : 0}
+                    </div>
+                  </div>
 
-              <div className="bg-white dark:bg-neutral-800 p-4 text-center border-r border-gray-200 dark:border-neutral-700">
-                <div className="text-sm text-gray-500 dark:text-gray-400">Posts</div>
-                <div className="text-xl font-bold text-gray-900 dark:text-white">
-                  {MyPosts.length || Math.floor(Math.random() * 100) + 10}
-                </div>
-              </div>
+                  <div className="bg-white dark:bg-neutral-800 p-4 text-center border-r border-gray-200 dark:border-neutral-700">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">Posts</div>
+                    <div className="text-xl font-bold text-gray-900 dark:text-white">
+                      {MyPosts.length}
+                    </div>
+                  </div>
 
-              <div className="bg-white dark:bg-neutral-800 p-4 text-center">
-                <div className="text-sm text-gray-500 dark:text-gray-400">Collections</div>
-                <div className="text-xl font-bold text-gray-900 dark:text-white">
-                  {user.colections?.length || Math.floor(Math.random() * 50) + 5}
+                  <div className="bg-white dark:bg-neutral-800 p-4 text-center">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">Collections</div>
+                    <div className="text-xl font-bold text-gray-900 dark:text-white">
+                      {user ? user.colections.length : 0}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>           
             </div>
           </div>
 
@@ -378,11 +415,10 @@ export default function Profile() {
             <div className="flex justify-center gap-8 px-4">
               <button onClick={() => setPageType("Posts")} className="relative py-4 px-2">
                 <span
-                  className={`font-semibold transition-colors ${
-                    pageType === "Posts"
-                      ? "text-lime-700 dark:text-lime-300"
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                  }`}
+                  className={`font-semibold transition-colors ${pageType === "Posts"
+                    ? "text-lime-700 dark:text-lime-300"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                    }`}
                 >
                   Posts
                 </span>
@@ -399,11 +435,10 @@ export default function Profile() {
 
               <button onClick={() => setPageType("Collections")} className="relative py-4 px-2">
                 <span
-                  className={`font-semibold transition-colors ${
-                    pageType === "Collections"
-                      ? "text-lime-700 dark:text-lime-300"
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                  }`}
+                  className={`font-semibold transition-colors ${pageType === "Collections"
+                    ? "text-lime-700 dark:text-lime-300"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                    }`}
                 >
                   Collections
                 </span>
