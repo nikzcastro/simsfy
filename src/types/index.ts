@@ -259,6 +259,7 @@ export type IUser = {
   vip?: boolean;
   verified?: boolean;
   bio?: string;
+  coins?: number;
   Country?: string;
   providers?: ProvidersList[];
   file?: File[];

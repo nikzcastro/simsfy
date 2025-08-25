@@ -3,6 +3,7 @@ import Verified from "../../components/shared/Verified";
 import { useUserContext } from "../../context/AuthContext";
 import userImg from "@/public/assets/icons/user.svg";
 import Logo from "@/public/assets/images/logo-simsfy.ico";
+import Coin from "@/public/assets/images/coin.png";
 
 import {
   useGetPostById,
@@ -24,6 +25,7 @@ import { VerifiedIcon } from "lucide-react";
 import googleImage from "../../public/assets/images/google.png"
 import clsx from "clsx";
 import ModalSyncAccout from "@/components/forms/ModalSyncAccout";
+import { formatNum } from "@/lib/utils";
 
 export default function Profile() {
   const { user, isLoading: isUserLoading, checkAuthUser } = useUserContext();
@@ -305,7 +307,10 @@ export default function Profile() {
               </div>
               <div className="flex justify-center items-center gap-2 flex-col">
                 {/* Username */}
+                <div className="flex flex-col justify-center items-center">
                 <div className="text-gray-500 dark:text-neutral-500 font-medium">@{user?.username}</div>
+                  {/* <p className="flex justify-center items-center font-bold"><img src={Coin} alt="" className="w-4" />{formatNum(user.coins)}</p> */}
+                </div>
                 <div className="flex justify-center items-center gap-2 select-none" draggable={false}>
                   {user && user.providers && Array.isArray(user.providers) && user.providers.some((provider) => provider && provider.provider === 'GITHUB') && (
                     <div draggable={false}>

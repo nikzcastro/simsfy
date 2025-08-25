@@ -22,7 +22,7 @@ export async function signInAccount(user: { email: string; password: string }) {
 }
 // ============================== GET ACCOUNT
 export async function getAccount() {
-  const response = await api.post("account");
+  const response = await api.get("account");
   return response;
 }
 

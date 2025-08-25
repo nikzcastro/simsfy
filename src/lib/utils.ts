@@ -67,6 +67,11 @@ export const multiFormatDateString = (timestamp: string = ""): string => {
 };
 
 
+export const formatNum = (num: number) => {
+  return num.toLocaleString('pt-BR');
+}
+
+
 
 
 

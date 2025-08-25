@@ -3,7 +3,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useUserContext } from "@/context/AuthContext";
 import { useSignOutAccount } from "@/lib/react-query/queries";
-import LogoSite from "@/public/assets/images/logo-simsfy.ico"
+// import LogoSite from "@/public/assets/images/logo-simsfy.ico"
+import LogoSite from "@/public/assets/images/fiveStation.png"
 import DefaultUserImage from "@/public/assets/icons/user.svg"
 import { motion } from "framer-motion";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -11,7 +12,8 @@ import "./css/dropdown.css";
 import { AccountDropdown } from "./AccountDropdown";
 import { blockRouts } from "../../types";
 import { useTranslation } from 'react-i18next'
-
+import CoinImage from "../../public/assets/images/coin.png"
+import { formatNum } from "@/lib/utils";
 const Topbar = () => {
   const { user, isAuthenticated, isModalLogin, setIsModalLogin, search, setSearch } =
     useUserContext();
@@ -24,8 +26,8 @@ const Topbar = () => {
 
   const languages = [
     { code: 'en', label: 'EN-US' },
-    { code: 'pt-BR', label: 'PT-BR' },
-    { code: 'pt-PT', label: 'PT-PT' },
+    { code: 'br', label: 'PT-BR' },
+    { code: 'pt', label: 'PT-PT' },
     { code: 'fr', label: 'FR-FR' },
     { code: 'de', label: 'DE' },
     { code: 'ru', label: 'RU' }
@@ -69,7 +71,7 @@ const Topbar = () => {
           {user && isAuthenticated && (
             <Link
               to="/foryou"
-              className={`w-auto px-4 h-10 bg-gray-200 hover:bg-gray-200 hover:dark:bg-neutral-800/70 ${location.pathname === "/foryou" ? "dark:bg-neutral-800 text-black dark:text-white" : " bg-transparent"
+              className={`w-auto px-4 h-10 bg-gray-200 hover:bg-hover-200 hover:bg-hover-200/20 ${location.pathname === "/foryou" ? "dark:bg-neutral-800 text-black dark:text-white" : " bg-transparent"
                 }  rounded-full flex justify-center items-center font-semibold text-sm hover:cursor-pointer transition-all duration-500`}
             >
               <span className="select-none">For You</span>
@@ -78,9 +80,9 @@ const Topbar = () => {
 
           <Link
             to="/"
-            className={`w-auto px-4 h-10 bg-gray-200 hover:bg-gray-200 hover:dark:bg-neutral-800/70 ${location.pathname === "/categories"
-                ? "dark:bg-neutral-800 text-black dark:text-white"
-                : " bg-transparent dark:text-white text-black"
+            className={`w-auto px-4 h-10 bg-gray-200 hover:bg-hover-200 hover:bg-hover-200/20 ${location.pathname === "/categories"
+              ? "dark:bg-neutral-800 text-black dark:text-white"
+              : " bg-transparent dark:text-white text-black"
               }  rounded-full flex justify-center items-center font-semibold text-sm hover:cursor-pointer transition-all duration-500`}
           >
             <span>Categories</span>
@@ -88,9 +90,9 @@ const Topbar = () => {
 
           <Link
             to="/"
-            className={`w-auto px-4 h-10 bg-gray-200 hover:bg-gray-200 hover:dark:bg-neutral-800/70 ${location.pathname === "/collections"
-                ? "dark:bg-neutral-800 text-black dark:text-white"
-                : " bg-transparent dark:text-white text-black"
+            className={`w-auto px-4 h-10 bg-gray-200 hover:bg-hover-200 hover:bg-hover-200/20 ${location.pathname === "/collections"
+              ? "dark:bg-neutral-800 text-black dark:text-white"
+              : " bg-transparent dark:text-white text-black"
               }  rounded-full flex justify-center items-center font-semibold text-sm hover:cursor-pointer transition-all duration-500`}
           >
             <span>Collections</span>
@@ -99,10 +101,10 @@ const Topbar = () => {
           {/* Dropdown Button */}
           <div className="relative group">
             <div
-              className={`w-10 h-10 bg-gray-200 hover:bg-gray-300 dark:bg-neutral-800 hover:dark:bg-neutral-700 
+              className={`w-10 h-10 bg-gray-200 hover:bg-hover-200 dark:bg-neutral-800 hover:dark:bg-neutral-700 
                      rounded-full flex justify-center items-center hover:cursor-pointer transition-all duration-300
                      ${location.pathname === "/members" || location.pathname === "/about"
-                  ? "dark:bg-neutral-600 bg-gray-300"
+                  ? "dark:bg-neutral-600 bg-hover-200"
                   : ""
                 }`}
             >
@@ -200,7 +202,7 @@ const Topbar = () => {
             <select
               value={i18n.language}
               onChange={(e) => i18n.changeLanguage(e.target.value)}
-              className="text-sm rounded-full bg-gray-200 dark:bg-neutral-800 p-2 px-3 appearance-none border-none focus:ring-0 focus:outline-none outline-none cursor-pointer hover:bg-gray-300 dark:hover:bg-neutral-700"
+              className="text-sm rounded-full bg-gray-200 dark:bg-neutral-800 p-2 px-3 appearance-none border-none focus:ring-0 focus:outline-none outline-none cursor-pointer hover:bg-hover-200 dark:hover:bg-neutral-700"
             >
               {languages.map((lang) => (
                 <option key={lang.code} value={lang.code}>
@@ -210,7 +212,7 @@ const Topbar = () => {
             </select>
           </div>
 
-          <button onClick={handleDarkMode} className="flex justify-center items-center h-10 w-10 cursor-pointer rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-neutral-800 dark:hover:bg-neutral-700">
+          <button onClick={handleDarkMode} className="flex justify-center items-center h-10 w-10 cursor-pointer rounded-full bg-gray-200 hover:bg-hover-200 dark:bg-neutral-800 dark:hover:bg-neutral-700">
 
             {isDarkMode ? (
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM80-440q-17 0-28.5-11.5T40-480q0-17 11.5-28.5T80-520h80q17 0 28.5 11.5T200-480q0 17-11.5 28.5T160-440H80Zm720 0q-17 0-28.5-11.5T760-480q0-17 11.5-28.5T800-520h80q17 0 28.5 11.5T920-480q0 17-11.5 28.5T880-440h-80ZM480-760q-17 0-28.5-11.5T440-800v-80q0-17 11.5-28.5T480-920q17 0 28.5 11.5T520-880v80q0 17-11.5 28.5T480-760Zm0 720q-17 0-28.5-11.5T440-80v-80q0-17 11.5-28.5T480-200q17 0 28.5 11.5T520-160v80q0 17-11.5 28.5T480-40ZM226-678l-43-42q-12-11-11.5-28t11.5-29q12-12 29-12t28 12l42 43q11 12 11 28t-11 28q-11 12-27.5 11.5T226-678Zm494 495-42-43q-11-12-11-28.5t11-27.5q11-12 27.5-11.5T734-282l43 42q12 11 11.5 28T777-183q-12 12-29 12t-28-12Zm-42-495q-12-11-11.5-27.5T678-734l42-43q11-12 28-11.5t29 11.5q12 12 12 29t-12 28l-43 42q-12 11-28 11t-28-11ZM183-183q-12-12-12-29t12-28l43-42q12-11 28.5-11t27.5 11q12 11 11.5 27.5T282-226l-42 43q-11 12-28 11.5T183-183Z" /></svg>
@@ -223,6 +225,12 @@ const Topbar = () => {
               onClick={handleNewUpLoad}>
               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M417-417H229q-26 0-44.5-18.5T166-480q0-26 18.5-44.5T229-543h188v-188q0-26 18.5-44.5T480-794q26 0 44.5 18.5T543-731v188h188q26 0 44.5 18.5T794-480q0 26-18.5 44.5T731-417H543v188q0 26-18.5 44.5T480-166q-26 0-44.5-18.5T417-229v-188Z" /></svg>
             </button>
+          )}
+          {isAuthenticated && (
+            <div className="flex justify-center items-center gap-1">
+              <img src={CoinImage} alt="" className="w-4" draggable={false} />
+              <p>{formatNum(user.coins)}</p>
+            </div>
           )}
           <div className="flex justify-center items-center gap-2 p-2 rounded-full bg-gray-200 dark:bg-neutral-800">
             <div className="w-[26px] h-[26px] bg-[#D9D9D9] rounded-full hover:cursor-pointer">
@@ -275,7 +283,7 @@ const Topbar = () => {
           <div className="flex items-center justify-between">
             {/* Botão Menu */}
             <div
-              className="w-10 h-10 rounded-full bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 flex items-center justify-center transition-all duration-200 cursor-pointer"
+              className="w-10 h-10 rounded-full bg-gray-200 dark:bg-neutral-800 hover:bg-hover-200 dark:hover:bg-neutral-700 flex items-center justify-center transition-all duration-200 cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -313,7 +321,7 @@ const Topbar = () => {
               <input type="checkbox" id="search-toggle" className="hidden peer" />
               <label
                 htmlFor="search-toggle"
-                className="w-10 h-10 rounded-full bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 peer-checked:bg-lime-300 peer-checked:dark:bg-lime-400 flex items-center justify-center transition-all duration-200 cursor-pointer"
+                className="w-10 h-10 rounded-full bg-gray-200 dark:bg-neutral-800 hover:bg-hover-200 dark:hover:bg-neutral-700 peer-checked:bg-lime-300 peer-checked:dark:bg-lime-400 flex items-center justify-center transition-all duration-200 cursor-pointer"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -1,9 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { createContext, useContext, useEffect, useState } from "react";
-
 import { IUser } from "@/types";
 import { getCurrentUser } from "@/lib/appwrite/api";
 import { api } from "@/lib/appwrite/config";
+import Cookies from 'js-cookie';
+import { Socket } from "dgram";
+import { socket } from "@/hooks/socket";
 
 export const INITIAL_USER: IUser = {
   id: "",
@@ -11,6 +13,7 @@ export const INITIAL_USER: IUser = {
   email: "",
   imageUrl: "",
   bio: "",
+  coins: 0,
   vip: false,
   verified: false,
   bannerUrl: "",
@@ -45,6 +48,7 @@ const INITIAL_STATE = {
   isModalLogin: false,
   setIsModalLogin: (active: boolean) => { },
   search: "",
+  socketIsConnected: false,
   setSearch: (text: string) => { },
 };
 
@@ -60,12 +64,14 @@ type IContextType = {
   isModalLogin: boolean;
   setIsModalLogin: (active: boolean) => void;
   search: string;
+  socketIsConnected: boolean;
   setSearch: (text: string) => void;
 };
 
 const AuthContext = createContext<IContextType>(INITIAL_STATE);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [isConnected, setIsConnected] = useState(socket.connected);
   const [user, setUser] = useState<IUser>(INITIAL_USER);
   const [isDarkMode, SetisDarkMode] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -73,10 +79,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isModalLogin, setIsModalLogin] = useState(false);
   const [search, setSearch] = useState("");
   const [token] = useState(localStorage.getItem("authToken"));
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  useEffect(() => {
+    socket.connect();
+    function onConnect() {
+      setIsConnected(true);
+    }
+
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    socket.on("updateUser", (a, b, c) => {
+      if (isAuthenticated) {
+        checkAuthUser()
+      }
+    });
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const authToken = Cookies.get('authToken');
+    if (!authToken || authToken == undefined) {
+      setUser(INITIAL_STATE)
+      setIsAuthenticated(false)
+      localStorage.removeItem("authToken");
+      if (["profile"].includes(location.pathname)) {
+        navigate('/')
+      }
+    }
+  }, [Cookies.get('authToken')])
   useEffect(() => {
     // const isDarkMode = checkDarkMode();
     // SetisDarkMode(isDarkMode);
+
+    const authToken = Cookies.get('authToken');
+    if (!authToken || authToken == undefined) {
+      setUser(INITIAL_STATE)
+      setIsAuthenticated(false)
+      localStorage.removeItem("authToken");
+      if (["profile"].includes(location.pathname)) {
+        navigate('/')
+      }
+    }
     if (user.theme === "dark") {
       SetisDarkMode(true);
     } else {
@@ -170,6 +225,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsModalLogin,
     search,
     setSearch,
+    socketIsConnected: isConnected
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

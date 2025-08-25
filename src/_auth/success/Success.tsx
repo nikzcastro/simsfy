@@ -18,7 +18,6 @@ const Success = () => {
 
         if (authToken) {
             localStorage.setItem("authToken", authToken);
-            console.log('Token encontrado:', authToken);
         } else {
             console.log('Token não encontrado');
         }

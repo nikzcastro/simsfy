@@ -57,33 +57,33 @@ export default function UserProfile() {
   const { mutateAsync: getCollections, isLoading: isLoadingGetColections } =
     useGetUserCollections();
   const { toast } = useToast();
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const allposts = await updateMyposts({
-        username: String(id),
-      });
+  const fetchPosts = async () => {
+    const allposts = await updateMyposts({
+      username: String(id),
+    });
 
-      const newUser = allposts.posts.filter((post) => post.user.username === id);
-      if (allposts.creator) {
-        setUser(allposts.creator);
-        setBannerImage(allposts.creator.bannerUrl);
-        setProfileImage(allposts.creator.imageUrl);
+    const newUser = allposts.posts.filter((post) => post.user.username === id);
+    if (allposts.creator) {
+      setUser(allposts.creator);
+      setBannerImage(allposts.creator.bannerUrl);
+      setProfileImage(allposts.creator.imageUrl);
+    }
+    if (allposts.posts) {
+      setUserPosts(allposts.posts as PostsType[]);
+    } else {
+      if (allposts.error) {
+        toast({ title: allposts.error });
+        setUserPosts([]);
       }
-      if (allposts.posts) {
-        setUserPosts(allposts.posts as PostsType[]);
-      } else {
-        if (allposts.error) {
-          toast({ title: allposts.error });
-          setUserPosts([]);
-        }
-      }
-      if (allposts.creator) {
-        const allCollections = await getCollections({
-          userId: Number(allposts.creator.id),
-        });
-        setMyCollections(allCollections);
-      }
-    };
+    }
+    if (allposts.creator) {
+      const allCollections = await getCollections({
+        userId: Number(allposts.creator.id),
+      });
+      setMyCollections(allCollections);
+    }
+  };
+  useEffect(() => {
     fetchPosts();
   }, []);
 
@@ -108,6 +108,7 @@ export default function UserProfile() {
       if (response) {
         // toast({ title: "Now following " + user.username })
         checkAuthUser()
+        fetchPosts()
       }
     } catch (error) {
       // toast({ title: "Error following user." })
@@ -120,6 +121,7 @@ export default function UserProfile() {
       if (response) {
         // toast({ title: "Unfollowed " + user.username })
         checkAuthUser()
+        fetchPosts()
       }
     } catch (error) {
       // toast({ title: "Error unfollowing user " })
@@ -137,7 +139,7 @@ export default function UserProfile() {
 
   return user && (
     <div className="w-full h-full relative overflow-y-auto scrollbar bg-gray-50 dark:bg-neutral-900">
-      {isUpdating ? (
+      {isUpdating ? (           
         <div className="flex justify-center items-center min-h-screen w-full">
           <Loader />
         </div>
